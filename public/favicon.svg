@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="#1a1a1a" stroke="#c9a962" stroke-width="3"/>
-  <text x="50" y="65" text-anchor="middle" font-size="40" fill="#c9a962">Σ</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8c97a"/>
+      <stop offset="50%" style="stop-color:#d4a852"/>
+      <stop offset="100%" style="stop-color:#a67c3d"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#0a0908"/>
+  <text x="16" y="22" font-family="Georgia, serif" font-size="16" font-style="italic" fill="url(#gold)" text-anchor="middle">Σ</text>
 </svg>
-

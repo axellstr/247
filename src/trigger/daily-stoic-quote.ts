@@ -254,54 +254,170 @@ export const sendStoicQuoteEmail = task({
 
     console.log(`📧 Sending stoic quote email to ${payload.to}`);
 
-    const unsubscribeLink = payload.unsubscribeUrl
-      ? `<a href="${payload.unsubscribeUrl}" style="color: #95a5a6;">Unsubscribe</a>`
-      : "";
-
-    // Email HTML template
+    // Email HTML template - Premium dark design matching the landing page
     const emailHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Daily Stoic Quote - ${payload.date}</title>
-        </head>
-        <body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
-          <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: #c9a962; margin: 0; font-size: 28px; font-weight: 400;">Daily Stoic</h1>
-            <p style="color: rgba(255,255,255,0.7); margin: 10px 0 0 0; font-size: 14px;">${payload.date}</p>
-          </div>
-          
-          <div style="background: #ffffff; padding: 40px; border-radius: 0 0 10px 10px; border: 1px solid #e0e0e0; border-top: none;">
-            <blockquote style="font-size: 22px; font-style: italic; color: #2c3e50; margin: 0 0 20px 0; padding-left: 20px; border-left: 4px solid #c9a962; line-height: 1.5;">
-              "${payload.quote}"
-            </blockquote>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Daily Stoic — ${payload.date}</title>
+    <!--[if mso]>
+    <noscript>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    </noscript>
+    <![endif]-->
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #0a0908; font-family: Georgia, 'Times New Roman', serif;">
+    <!-- Wrapper -->
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0a0908;">
+      <tr>
+        <td align="center" style="padding: 40px 20px;">
+          <!-- Main Container -->
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 560px; margin: 0 auto;">
             
-            <p style="text-align: right; color: #7f8c8d; font-size: 16px; margin: 0;">
-              — <strong style="color: #c9a962;">${payload.author}</strong>
-            </p>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px;">
-            <p style="color: #95a5a6; font-size: 12px; margin: 0;">
-              Start your day with wisdom from the Stoics
-              ${unsubscribeLink ? `<br><br>${unsubscribeLink}` : ""}
-            </p>
-          </div>
-        </body>
-      </html>
-    `;
+            <!-- Logo & Date Header -->
+            <tr>
+              <td align="center" style="padding-bottom: 40px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="text-align: center;">
+                      <!-- Greek Letter Logo -->
+                      <div style="font-family: Georgia, serif; font-size: 36px; color: #d4a852; font-style: italic; margin-bottom: 16px;">Σ</div>
+                      <!-- Brand Name -->
+                      <h1 style="margin: 0; font-family: Georgia, 'Palatino Linotype', serif; font-size: 14px; font-weight: normal; letter-spacing: 4px; text-transform: uppercase; color: #7a7162;">Daily Stoic</h1>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Decorative Line -->
+            <tr>
+              <td align="center" style="padding-bottom: 40px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="60">
+                  <tr>
+                    <td style="height: 1px; background: linear-gradient(to right, transparent, #d4a852, transparent);"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Quote Card -->
+            <tr>
+              <td>
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #151311; border: 1px solid #2a2622; border-radius: 16px;">
+                  <tr>
+                    <td style="padding: 48px 40px;">
+                      <!-- Opening Quote Mark -->
+                      <div style="font-family: Georgia, serif; font-size: 72px; color: #d4a852; opacity: 0.15; line-height: 0.8; margin-bottom: -20px; margin-left: -8px;">"</div>
+                      
+                      <!-- Quote Text -->
+                      <p style="margin: 0 0 32px 0; font-family: Georgia, 'Palatino Linotype', serif; font-size: 24px; font-style: italic; line-height: 1.6; color: #f5f0e8;">
+                        ${payload.quote}
+                      </p>
+                      
+                      <!-- Author -->
+                      <table role="presentation" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="width: 32px; height: 2px; background-color: #d4a852; opacity: 0.5;"></td>
+                          <td style="padding-left: 16px;">
+                            <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 500; color: #d4a852;">
+                              ${payload.author}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Date Badge -->
+            <tr>
+              <td align="center" style="padding-top: 32px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding: 10px 20px; background-color: #1a1816; border: 1px solid #2a2622; border-radius: 100px;">
+                      <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; letter-spacing: 1px; color: #7a7162; text-transform: uppercase;">
+                        ${payload.date}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Reflection Prompt -->
+            <tr>
+              <td align="center" style="padding-top: 48px; padding-bottom: 48px;">
+                <p style="margin: 0; font-family: Georgia, 'Palatino Linotype', serif; font-size: 15px; font-style: italic; color: #7a7162; line-height: 1.7;">
+                  Take a moment to reflect on these words.<br>
+                  Let them guide your actions today.
+                </p>
+              </td>
+            </tr>
+            
+            <!-- Divider -->
+            <tr>
+              <td align="center">
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td style="height: 1px; background-color: #2a2622;"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="padding-top: 32px;">
+                <p style="margin: 0 0 8px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; color: #7a7162;">
+                  Timeless wisdom, delivered daily at dawn.
+                </p>
+                ${payload.unsubscribeUrl ? `
+                <p style="margin: 16px 0 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px;">
+                  <a href="${payload.unsubscribeUrl}" style="color: #7a7162; text-decoration: underline; opacity: 0.7;">Unsubscribe</a>
+                </p>
+                ` : ""}
+              </td>
+            </tr>
+            
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+    `.trim();
 
-    // Email plain text version
+    // Email plain text version - refined for readability
     const emailText = `
-Daily Stoic - ${payload.date}
+═══════════════════════════════════════
+
+           DAILY STOIC
+           ${payload.date}
+
+═══════════════════════════════════════
 
 "${payload.quote}"
 
-— ${payload.author}
+                    — ${payload.author}
 
-Start your day with wisdom from the Stoics
+───────────────────────────────────────
+
+Take a moment to reflect on these words.
+Let them guide your actions today.
+
+───────────────────────────────────────
+
+Timeless wisdom, delivered daily at dawn.
 ${payload.unsubscribeUrl ? `\nUnsubscribe: ${payload.unsubscribeUrl}` : ""}
     `.trim();
 

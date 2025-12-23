@@ -39,73 +39,180 @@ if (token) {
     <title>Unsubscribe — Daily Stoic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    <!-- Atmospheric Background -->
+    <div class="page-background"></div>
+    
     <main class="unsubscribe">
       <div class="unsubscribe__card">
         {status === 'form' && (
           <>
-            <h1>Unsubscribe</h1>
-            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
-              We're sorry to see you go. Enter your email below to unsubscribe.
+            <div class="unsubscribe__icon">🍂</div>
+            <h1 class="unsubscribe__title">Until We Meet Again</h1>
+            <p class="unsubscribe__text">
+              We're sorry to see you go. Enter your email below to unsubscribe from daily wisdom.
             </p>
-            <form id="unsubscribe-form">
+            <form id="unsubscribe-form" class="unsubscribe__form">
               <input 
                 type="email" 
                 name="email"
                 class="subscribe-form__input" 
                 placeholder="Enter your email" 
                 required 
-                style="width: 100%; margin-bottom: 1rem;"
               />
-              <button type="submit" class="subscribe-form__button" style="width: 100%;">
-                Unsubscribe
+              <button type="submit" class="subscribe-form__button subscribe-form__button--muted">
+                <span>Unsubscribe</span>
               </button>
             </form>
-            <div id="message" class="message" style="display: none; margin-top: 1rem;"></div>
+            <div id="message" class="message" style="display: none;"></div>
           </>
         )}
 
         {status === 'success' && (
           <>
-            <h1 style="color: var(--color-success);">✓ Unsubscribed</h1>
-            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
+            <div class="unsubscribe__icon unsubscribe__icon--success">✓</div>
+            <h1 class="unsubscribe__title">Farewell, Friend</h1>
+            <p class="unsubscribe__text">
               {message}
             </p>
-            <p style="color: var(--color-text-muted);">
-              Changed your mind? <a href="/">Subscribe again</a>
+            <p class="unsubscribe__text unsubscribe__text--small">
+              Remember: "The obstacle is the way."
             </p>
+            <a href="/" class="unsubscribe__link">Return to Daily Stoic</a>
           </>
         )}
 
         {status === 'invalid' && (
           <>
-            <h1 style="color: var(--color-error);">Invalid Link</h1>
-            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
+            <div class="unsubscribe__icon unsubscribe__icon--error">✕</div>
+            <h1 class="unsubscribe__title">Invalid Link</h1>
+            <p class="unsubscribe__text">
               {message}
             </p>
-            <p style="color: var(--color-text-muted);">
-              <a href="/">Return to homepage</a>
-            </p>
+            <a href="/" class="unsubscribe__link">Return to homepage</a>
           </>
         )}
       </div>
     </main>
+
+    <style>
+      .unsubscribe__card {
+        padding: 3rem 2.5rem;
+        text-align: center;
+        animation: fadeInUp 0.8s var(--ease-out-expo);
+      }
+
+      .unsubscribe__icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .unsubscribe__icon--success {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: rgba(90, 154, 106, 0.15);
+        border: 1px solid rgba(90, 154, 106, 0.3);
+        border-radius: 50%;
+        color: #8bc99a;
+        font-size: 1.5rem;
+      }
+
+      .unsubscribe__icon--error {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: rgba(196, 92, 92, 0.15);
+        border: 1px solid rgba(196, 92, 92, 0.3);
+        border-radius: 50%;
+        color: #e09090;
+        font-size: 1.5rem;
+      }
+
+      .unsubscribe__title {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--color-text);
+      }
+
+      .unsubscribe__text {
+        color: var(--color-text-muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .unsubscribe__text--small {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 0.95rem;
+        color: var(--color-text-secondary);
+        opacity: 0.8;
+      }
+
+      .unsubscribe__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .unsubscribe__form .subscribe-form__input {
+        background: var(--color-bg-elevated);
+        border: 1px solid var(--color-border);
+      }
+
+      .subscribe-form__button--muted {
+        background: var(--color-bg-elevated);
+        border: 1px solid var(--color-border);
+        color: var(--color-text-secondary);
+      }
+
+      .subscribe-form__button--muted:hover {
+        background: var(--color-border);
+        border-color: var(--color-border-light);
+      }
+
+      .subscribe-form__button--muted::before {
+        display: none;
+      }
+
+      .unsubscribe__link {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        color: var(--color-accent);
+        transition: color 0.3s ease;
+      }
+
+      .unsubscribe__link:hover {
+        color: var(--color-accent-light);
+      }
+    </style>
 
     <script>
       const form = document.getElementById('unsubscribe-form') as HTMLFormElement | null;
       const messageEl = document.getElementById('message') as HTMLDivElement | null;
 
       if (form && messageEl) {
+        const button = form.querySelector('button') as HTMLButtonElement;
+        const buttonText = button.querySelector('span') as HTMLSpanElement;
+        const originalText = buttonText.textContent;
+
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           
           const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
-          const button = form.querySelector('button') as HTMLButtonElement;
           
           button.disabled = true;
-          button.textContent = 'Processing...';
+          buttonText.innerHTML = '<span class="spinner"></span>Processing...';
 
           try {
             const response = await fetch('/api/unsubscribe', {
@@ -128,7 +235,7 @@ if (token) {
             messageEl.textContent = 'Network error. Please try again.';
           } finally {
             button.disabled = false;
-            button.textContent = 'Unsubscribe';
+            buttonText.textContent = originalText;
             messageEl.style.display = 'block';
           }
         });
@@ -136,5 +243,3 @@ if (token) {
     </script>
   </body>
 </html>
-
-

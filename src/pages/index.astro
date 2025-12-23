@@ -11,83 +11,148 @@ import '../styles/global.css';
     <title>Daily Stoic — Morning Wisdom in Your Inbox</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    <!-- Atmospheric Background -->
+    <div class="page-background"></div>
+    
+    <!-- Floating decorative elements -->
+    <div class="floating-elements">
+      <div class="floating-element">Σ</div>
+      <div class="floating-element">Φ</div>
+      <div class="floating-element">Ω</div>
+    </div>
+
     <main class="hero">
       <div class="container">
+        <!-- Roman numeral decoration -->
+        <div class="hero__numeral">MMXXV</div>
+        
+        <!-- Badge -->
         <div class="hero__badge">
-          <span>✦</span> Free daily emails
+          Free daily wisdom delivered at dawn
         </div>
         
+        <!-- Title -->
         <h1 class="hero__title">
-          Start each day with<br /><em>Stoic wisdom</em>
+          Awaken each day with<br /><em>ancient wisdom</em>
         </h1>
         
+        <!-- Subtitle -->
         <h2 class="hero__subtitle">
-          Ancient philosophy for the modern mind.<br />
-          One quote, every morning, 8 AM.
+          Timeless philosophy for the modern mind.<br />
+          One carefully curated quote, every morning at 8 AM.
         </h2>
 
+        <!-- Subscribe Form -->
         <form class="subscribe-form" id="subscribe-form">
           <input 
             type="email" 
             name="email"
             class="subscribe-form__input" 
-            placeholder="Enter your email" 
+            placeholder="Enter your email address" 
             required 
             autocomplete="email"
           />
           <button type="submit" class="subscribe-form__button">
-            Subscribe
+            <span>Begin Journey</span>
           </button>
         </form>
 
+        <!-- Message -->
         <div id="message" class="message" style="display: none;"></div>
 
-        <div class="quote-preview">
-          <div class="quote-preview__label">Today's Preview</div>
-          <p class="quote-preview__text">
-            "You have power over your mind — not outside events. Realize this, and you will find strength."
-          </p>
-          <p class="quote-preview__author">— Marcus Aurelius</p>
+        <!-- Trust indicators -->
+        <div class="trust-indicators">
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>No spam, ever</span>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Daily at 8 AM</span>
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <span>Unsubscribe anytime</span>
+          </div>
         </div>
 
-        <div class="features">
-          <div class="feature">
-            <div class="feature__icon">📬</div>
-            <h3 class="feature__title">Daily at 8 AM</h3>
-            <p class="feature__description">
-              Consistent delivery to start your morning with intention and clarity.
+        <!-- Quote Preview Section -->
+        <section class="quote-section">
+          <div class="quote-preview">
+            <div class="quote-preview__label">Today's Reflection</div>
+            <p class="quote-preview__text">
+              "You have power over your mind — not outside events. Realize this, and you will find strength."
+            </p>
+            <p class="quote-preview__author">
+              Marcus Aurelius
             </p>
           </div>
-          <div class="feature">
-            <div class="feature__icon">📜</div>
-            <h3 class="feature__title">Curated Wisdom</h3>
-            <p class="feature__description">
-              Hand-picked quotes from Marcus Aurelius, Seneca, and Epictetus.
-            </p>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+          <div class="features-header">
+            <p class="features-header__title">What you receive</p>
           </div>
-          <div class="feature">
-            <div class="feature__icon">🚫</div>
-            <h3 class="feature__title">No Spam, Ever</h3>
-            <p class="feature__description">
-              Just one quote. Unsubscribe anytime with a single click.
-            </p>
+          
+          <div class="features">
+            <div class="feature">
+              <div class="feature__icon">☀️</div>
+              <h3 class="feature__title">Morning Ritual</h3>
+              <p class="feature__description">
+                Start each day with intention. Your quote arrives precisely at 8 AM.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="feature__icon">📜</div>
+              <h3 class="feature__title">Curated Wisdom</h3>
+              <p class="feature__description">
+                Hand-selected teachings from Marcus Aurelius, Seneca, and Epictetus.
+              </p>
+            </div>
+            <div class="feature">
+              <div class="feature__icon">✨</div>
+              <h3 class="feature__title">Pure Simplicity</h3>
+              <p class="feature__description">
+                One beautiful email. No ads, no links, no distractions. Just wisdom.
+              </p>
+            </div>
           </div>
+        </section>
+
+        <!-- Philosophy Quote Divider -->
+        <div class="divider-quote">
+          <p class="divider-quote__text">
+            "The happiness of your life depends upon the quality of your thoughts."
+          </p>
+          <p class="divider-quote__author">— Marcus Aurelius, Meditations</p>
         </div>
       </div>
     </main>
 
     <footer class="footer">
-      <p>Built with philosophy in mind · <a href="/unsubscribe">Unsubscribe</a></p>
+      <div class="footer__content">
+        <div class="footer__links">
+          <a href="/unsubscribe">Unsubscribe</a>
+          <span style="color: var(--color-border-light);">·</span>
+          <a href="mailto:hello@dailystoic.com">Contact</a>
+        </div>
+        <p class="footer__credit">
+          Built with philosophy in mind
+        </p>
+      </div>
     </footer>
 
     <script>
       const form = document.getElementById('subscribe-form') as HTMLFormElement;
       const messageEl = document.getElementById('message') as HTMLDivElement;
       const button = form.querySelector('button') as HTMLButtonElement;
+      const buttonText = button.querySelector('span') as HTMLSpanElement;
+      const originalText = buttonText.textContent;
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -96,7 +161,7 @@ import '../styles/global.css';
         
         // Show loading state
         button.disabled = true;
-        button.innerHTML = '<span class="spinner"></span>Subscribing...';
+        buttonText.innerHTML = '<span class="spinner"></span>Joining...';
         messageEl.style.display = 'none';
 
         try {
@@ -110,7 +175,7 @@ import '../styles/global.css';
 
           if (response.ok) {
             messageEl.className = 'message message--success';
-            messageEl.textContent = data.message || 'Welcome! Check your inbox for your first quote.';
+            messageEl.textContent = data.message || 'Welcome to the journey. Your first quote awaits at dawn.';
             form.reset();
           } else {
             messageEl.className = 'message message--error';
@@ -121,12 +186,10 @@ import '../styles/global.css';
           messageEl.textContent = 'Network error. Please check your connection.';
         } finally {
           button.disabled = false;
-          button.textContent = 'Subscribe';
+          buttonText.textContent = originalText;
           messageEl.style.display = 'block';
         }
       });
     </script>
   </body>
 </html>
-
-
