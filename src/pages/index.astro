@@ -1,0 +1,132 @@
+---
+// Daily Stoic Landing Page
+import '../styles/global.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Receive a powerful stoic quote in your inbox every morning. Timeless wisdom from Marcus Aurelius, Seneca, and Epictetus." />
+    <title>Daily Stoic — Morning Wisdom in Your Inbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <main class="hero">
+      <div class="container">
+        <div class="hero__badge">
+          <span>✦</span> Free daily emails
+        </div>
+        
+        <h1 class="hero__title">
+          Start each day with<br /><em>Stoic wisdom</em>
+        </h1>
+        
+        <h2 class="hero__subtitle">
+          Ancient philosophy for the modern mind.<br />
+          One quote, every morning, 8 AM.
+        </h2>
+
+        <form class="subscribe-form" id="subscribe-form">
+          <input 
+            type="email" 
+            name="email"
+            class="subscribe-form__input" 
+            placeholder="Enter your email" 
+            required 
+            autocomplete="email"
+          />
+          <button type="submit" class="subscribe-form__button">
+            Subscribe
+          </button>
+        </form>
+
+        <div id="message" class="message" style="display: none;"></div>
+
+        <div class="quote-preview">
+          <div class="quote-preview__label">Today's Preview</div>
+          <p class="quote-preview__text">
+            "You have power over your mind — not outside events. Realize this, and you will find strength."
+          </p>
+          <p class="quote-preview__author">— Marcus Aurelius</p>
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <div class="feature__icon">📬</div>
+            <h3 class="feature__title">Daily at 8 AM</h3>
+            <p class="feature__description">
+              Consistent delivery to start your morning with intention and clarity.
+            </p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon">📜</div>
+            <h3 class="feature__title">Curated Wisdom</h3>
+            <p class="feature__description">
+              Hand-picked quotes from Marcus Aurelius, Seneca, and Epictetus.
+            </p>
+          </div>
+          <div class="feature">
+            <div class="feature__icon">🚫</div>
+            <h3 class="feature__title">No Spam, Ever</h3>
+            <p class="feature__description">
+              Just one quote. Unsubscribe anytime with a single click.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Built with philosophy in mind · <a href="/unsubscribe">Unsubscribe</a></p>
+    </footer>
+
+    <script>
+      const form = document.getElementById('subscribe-form') as HTMLFormElement;
+      const messageEl = document.getElementById('message') as HTMLDivElement;
+      const button = form.querySelector('button') as HTMLButtonElement;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
+        
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner"></span>Subscribing...';
+        messageEl.style.display = 'none';
+
+        try {
+          const response = await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            messageEl.className = 'message message--success';
+            messageEl.textContent = data.message || 'Welcome! Check your inbox for your first quote.';
+            form.reset();
+          } else {
+            messageEl.className = 'message message--error';
+            messageEl.textContent = data.error || 'Something went wrong. Please try again.';
+          }
+        } catch (error) {
+          messageEl.className = 'message message--error';
+          messageEl.textContent = 'Network error. Please check your connection.';
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Subscribe';
+          messageEl.style.display = 'block';
+        }
+      });
+    </script>
+  </body>
+</html>
+
+

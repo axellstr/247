@@ -1,0 +1,140 @@
+---
+import { createClient } from '@supabase/supabase-js';
+import '../styles/global.css';
+
+const token = Astro.url.searchParams.get('token');
+let status: 'form' | 'success' | 'error' | 'invalid' = 'form';
+let message = '';
+
+// If token provided, process unsubscribe
+if (token) {
+  const supabaseUrl = import.meta.env.SUPABASE_URL;
+  const supabaseKey = import.meta.env.SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseKey) {
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    
+    const { data, error } = await supabase
+      .from('subscribers')
+      .update({ subscribed: false })
+      .eq('unsubscribe_token', token)
+      .select()
+      .single();
+
+    if (error || !data) {
+      status = 'invalid';
+      message = 'Invalid or expired unsubscribe link.';
+    } else {
+      status = 'success';
+      message = 'You have been successfully unsubscribed.';
+    }
+  }
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unsubscribe — Daily Stoic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <main class="unsubscribe">
+      <div class="unsubscribe__card">
+        {status === 'form' && (
+          <>
+            <h1>Unsubscribe</h1>
+            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
+              We're sorry to see you go. Enter your email below to unsubscribe.
+            </p>
+            <form id="unsubscribe-form">
+              <input 
+                type="email" 
+                name="email"
+                class="subscribe-form__input" 
+                placeholder="Enter your email" 
+                required 
+                style="width: 100%; margin-bottom: 1rem;"
+              />
+              <button type="submit" class="subscribe-form__button" style="width: 100%;">
+                Unsubscribe
+              </button>
+            </form>
+            <div id="message" class="message" style="display: none; margin-top: 1rem;"></div>
+          </>
+        )}
+
+        {status === 'success' && (
+          <>
+            <h1 style="color: var(--color-success);">✓ Unsubscribed</h1>
+            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
+              {message}
+            </p>
+            <p style="color: var(--color-text-muted);">
+              Changed your mind? <a href="/">Subscribe again</a>
+            </p>
+          </>
+        )}
+
+        {status === 'invalid' && (
+          <>
+            <h1 style="color: var(--color-error);">Invalid Link</h1>
+            <p style="margin: 1.5rem 0; color: var(--color-text-muted);">
+              {message}
+            </p>
+            <p style="color: var(--color-text-muted);">
+              <a href="/">Return to homepage</a>
+            </p>
+          </>
+        )}
+      </div>
+    </main>
+
+    <script>
+      const form = document.getElementById('unsubscribe-form') as HTMLFormElement | null;
+      const messageEl = document.getElementById('message') as HTMLDivElement | null;
+
+      if (form && messageEl) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
+          const button = form.querySelector('button') as HTMLButtonElement;
+          
+          button.disabled = true;
+          button.textContent = 'Processing...';
+
+          try {
+            const response = await fetch('/api/unsubscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              messageEl.className = 'message message--success';
+              messageEl.textContent = data.message;
+            } else {
+              messageEl.className = 'message message--error';
+              messageEl.textContent = data.error;
+            }
+          } catch (error) {
+            messageEl.className = 'message message--error';
+            messageEl.textContent = 'Network error. Please try again.';
+          } finally {
+            button.disabled = false;
+            button.textContent = 'Unsubscribe';
+            messageEl.style.display = 'block';
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+
+

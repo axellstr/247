@@ -1,0 +1,25 @@
+{
+  "name": "daily-stoic",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "dev:trigger": "npx trigger.dev@latest dev --env-file=.env",
+    "deploy:trigger": "trigger deploy",
+    "test:task": "node test-task.js"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
+    "@supabase/supabase-js": "^2.89.0",
+    "@trigger.dev/sdk": "4.3.1",
+    "astro": "^5.16.6",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@trigger.dev/build": "4.3.1",
+    "trigger.dev": "^4.3.1",
+    "typescript": "^5.0.4"
+  }
+}
