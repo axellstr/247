@@ -154,76 +154,133 @@ function getSupabase() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
+// Timezone regions for 7 AM delivery
+const TIMEZONE_REGIONS = {
+  // Europe: 7 AM CET = 6 AM UTC (winter), 5 AM UTC (summer) - using 6 AM UTC
+  europe: [
+    'Europe/London', 'Europe/Dublin', 'Europe/Lisbon', 'Europe/Paris', 
+    'Europe/Berlin', 'Europe/Rome', 'Europe/Madrid', 'Europe/Amsterdam',
+    'Europe/Brussels', 'Europe/Vienna', 'Europe/Warsaw', 'Europe/Prague',
+    'Europe/Budapest', 'Europe/Stockholm', 'Europe/Oslo', 'Europe/Copenhagen',
+    'Europe/Helsinki', 'Europe/Athens', 'Europe/Bucharest', 'Europe/Sofia',
+    'Europe/Zurich', 'Europe/Moscow', 'Europe/Kiev', 'Europe/Istanbul',
+    'Africa/Cairo', 'Africa/Johannesburg', 'UTC'
+  ],
+  // Asia: 7 AM in major Asian timezones (runs at 23:00 UTC for East Asia)
+  asia: [
+    'Asia/Tokyo', 'Asia/Seoul', 'Asia/Shanghai', 'Asia/Hong_Kong',
+    'Asia/Singapore', 'Asia/Taipei', 'Asia/Manila', 'Asia/Jakarta',
+    'Asia/Bangkok', 'Asia/Ho_Chi_Minh', 'Asia/Kuala_Lumpur', 'Australia/Sydney',
+    'Australia/Melbourne', 'Australia/Brisbane', 'Australia/Perth',
+    'Pacific/Auckland', 'Asia/Kolkata', 'Asia/Mumbai', 'Asia/Dubai',
+    'Asia/Karachi', 'Asia/Dhaka'
+  ],
+  // Americas: 7 AM in US/Americas timezones (runs at 12:00 UTC for Eastern, 14:00 UTC for Pacific)
+  americas: [
+    'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
+    'America/Toronto', 'America/Vancouver', 'America/Mexico_City', 'America/Sao_Paulo',
+    'America/Buenos_Aires', 'America/Lima', 'America/Bogota', 'America/Santiago'
+  ]
+};
+
 /**
- * Scheduled task that runs daily at 8:00 AM UTC
- * Sends a different stoic quote to all active subscribers
+ * Core function to send quotes to subscribers in specific timezone regions
  */
-export const dailyStoicQuote = schedules.task({
-  id: "daily-stoic-quote",
-  cron: "0 8 * * *", // Every day at 8:00 AM UTC
-  run: async (payload) => {
-    const quote = getDailyQuote();
-    const today = new Date().toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+async function sendQuotesToRegion(regionName: string, timezones: string[]) {
+  const quote = getDailyQuote();
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
-    console.log(`📬 Sending daily stoic quote for ${today}`);
-    console.log(`📜 Quote: "${quote.quote}" - ${quote.author}`);
+  console.log(`📬 [${regionName.toUpperCase()}] Sending daily stoic quote for ${today}`);
+  console.log(`📜 Quote: "${quote.quote}" - ${quote.author}`);
 
-    // Get subscribers from Supabase
-    const supabase = getSupabase();
+  // Get subscribers from Supabase filtered by timezone
+  const supabase = getSupabase();
 
-    const { data: subscribers, error } = await supabase
-      .from("subscribers")
-      .select("email, unsubscribe_token")
-      .eq("subscribed", true);
+  const { data: subscribers, error } = await supabase
+    .from("subscribers")
+    .select("email, unsubscribe_token, timezone")
+    .eq("subscribed", true)
+    .in("timezone", timezones);
 
-    if (error) {
-      console.error("Failed to fetch subscribers:", error);
-      throw new Error(`Failed to fetch subscribers: ${error.message}`);
-    }
+  if (error) {
+    console.error("Failed to fetch subscribers:", error);
+    throw new Error(`Failed to fetch subscribers: ${error.message}`);
+  }
 
-    if (!subscribers || subscribers.length === 0) {
-      console.warn("⚠️ No active subscribers found");
-      return {
-        sent: false,
-        reason: "No active subscribers",
-        date: today,
-      };
-    }
-
-    console.log(`📧 Sending quotes to ${subscribers.length} subscriber(s)`);
-
-    // Get the app URL for unsubscribe links
-    const appUrl = process.env.APP_URL || "https://your-app.vercel.app";
-
-    // Trigger email sending for each subscriber
-    const emailResults = await Promise.all(
-      subscribers.map((subscriber) => {
-        const unsubscribeUrl = `${appUrl}/unsubscribe?token=${subscriber.unsubscribe_token}`;
-
-        return sendStoicQuoteEmail.trigger({
-          to: subscriber.email,
-          quote: quote.quote,
-          author: quote.author,
-          date: today,
-          unsubscribeUrl,
-        });
-      })
-    );
-
+  if (!subscribers || subscribers.length === 0) {
+    console.log(`ℹ️ No active subscribers in ${regionName} region`);
     return {
-      sent: true,
+      sent: false,
+      reason: `No active subscribers in ${regionName}`,
+      region: regionName,
       date: today,
-      quote: quote.quote,
-      author: quote.author,
-      subscribersCount: subscribers.length,
-      emailResults: emailResults.map((r) => r.id),
     };
-  },
+  }
+
+  console.log(`📧 [${regionName.toUpperCase()}] Sending to ${subscribers.length} subscriber(s)`);
+
+  // Get the app URL for unsubscribe links
+  const appUrl = process.env.APP_URL || "https://247-pi.vercel.app";
+
+  // Trigger email sending for each subscriber
+  const emailResults = await Promise.all(
+    subscribers.map((subscriber) => {
+      const unsubscribeUrl = `${appUrl}/unsubscribe?token=${subscriber.unsubscribe_token}`;
+
+      return sendStoicQuoteEmail.trigger({
+        to: subscriber.email,
+        quote: quote.quote,
+        author: quote.author,
+        date: today,
+        unsubscribeUrl,
+      });
+    })
+  );
+
+  return {
+    sent: true,
+    region: regionName,
+    date: today,
+    quote: quote.quote,
+    author: quote.author,
+    subscribersCount: subscribers.length,
+    emailResults: emailResults.map((r) => r.id),
+  };
+}
+
+/**
+ * Europe scheduled task - runs at 6:00 AM UTC (7 AM CET)
+ * Covers European, African, and Middle Eastern timezones
+ */
+export const dailyStoicQuoteEurope = schedules.task({
+  id: "daily-stoic-quote-europe",
+  cron: "0 6 * * *", // 6:00 AM UTC = 7 AM CET
+  run: async () => sendQuotesToRegion("europe", TIMEZONE_REGIONS.europe),
+});
+
+/**
+ * Asia scheduled task - runs at 23:00 UTC (7-8 AM in East Asia next day)
+ * Covers Asian, Australian, and Pacific timezones
+ */
+export const dailyStoicQuoteAsia = schedules.task({
+  id: "daily-stoic-quote-asia",
+  cron: "0 23 * * *", // 23:00 UTC = 7 AM Tokyo, 8 AM Sydney
+  run: async () => sendQuotesToRegion("asia", TIMEZONE_REGIONS.asia),
+});
+
+/**
+ * Americas scheduled task - runs at 12:00 UTC (7 AM Eastern, 5 AM Pacific)
+ * Covers North and South American timezones
+ */
+export const dailyStoicQuoteAmericas = schedules.task({
+  id: "daily-stoic-quote-americas",
+  cron: "0 12 * * *", // 12:00 UTC = 7 AM Eastern
+  run: async () => sendQuotesToRegion("americas", TIMEZONE_REGIONS.americas),
 });
 
 /**

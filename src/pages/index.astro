@@ -159,6 +159,9 @@ import '../styles/global.css';
         
         const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
         
+        // Detect user's timezone
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+        
         // Show loading state
         button.disabled = true;
         buttonText.innerHTML = '<span class="spinner"></span>Joining...';
@@ -168,7 +171,7 @@ import '../styles/global.css';
           const response = await fetch('/api/subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, timezone }),
           });
 
           const data = await response.json();

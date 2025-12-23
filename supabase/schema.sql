@@ -8,8 +8,12 @@ CREATE TABLE IF NOT EXISTS subscribers (
   email TEXT UNIQUE NOT NULL,
   subscribed BOOLEAN DEFAULT true,
   unsubscribe_token UUID DEFAULT gen_random_uuid() UNIQUE,
+  timezone TEXT DEFAULT 'UTC',  -- IANA timezone like 'Europe/London' or 'Asia/Tokyo'
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Migration: Add timezone column to existing table (run this if table already exists)
+-- ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'UTC';
 
 -- Create index on email for fast lookups
 CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers(email);

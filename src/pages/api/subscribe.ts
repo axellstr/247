@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { email } = await request.json();
+    const { email, timezone } = await request.json();
 
     // Validate email
     if (!email || typeof email !== 'string') {
@@ -55,7 +55,11 @@ export const POST: APIRoute = async ({ request }) => {
         // Re-subscribe
         const { error } = await supabase
           .from('subscribers')
-          .update({ subscribed: true, unsubscribe_token: unsubscribeToken })
+          .update({ 
+            subscribed: true, 
+            unsubscribe_token: unsubscribeToken,
+            timezone: timezone || 'UTC'
+          })
           .eq('id', existing.id);
 
         if (error) throw error;
@@ -74,12 +78,13 @@ export const POST: APIRoute = async ({ request }) => {
         email: email.toLowerCase(),
         subscribed: true,
         unsubscribe_token: unsubscribeToken,
+        timezone: timezone || 'UTC',
       });
 
     if (error) throw error;
 
     return new Response(
-      JSON.stringify({ message: 'Welcome! You will receive your first stoic quote tomorrow at 8 AM.' }),
+      JSON.stringify({ message: 'Welcome! Your daily wisdom will arrive at 7 AM your local time.' }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
 
