@@ -8,7 +8,36 @@ import '../styles/global.css';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Receive a powerful stoic quote in your inbox every morning. Timeless wisdom from Marcus Aurelius, Seneca, and Epictetus." />
-    <title>Daily Stoic — Morning Wisdom in Your Inbox</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dailystoic.app/" />
+    <meta property="og:title" content="Daily Stoic — Morning Wisdom in Your Inbox" />
+    <meta property="og:description" content="Receive a powerful stoic quote in your inbox every morning. Timeless wisdom from Marcus Aurelius, Seneca, and Epictetus." />
+    <meta property="og:image" content="https://dailystoic.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Daily Stoic" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://dailystoic.app/" />
+    <meta name="twitter:title" content="Daily Stoic — Morning Wisdom in Your Inbox" />
+    <meta name="twitter:description" content="Receive a powerful stoic quote in your inbox every morning. Timeless wisdom from Marcus Aurelius, Seneca, and Epictetus." />
+    <meta name="twitter:image" content="https://dailystoic.app/og-image.png" />
+
+    <!-- Additional SEO -->
+    <meta name="author" content="Daily Stoic" />
+    <meta name="keywords" content="stoicism, stoic quotes, Marcus Aurelius, Seneca, Epictetus, daily wisdom, philosophy, morning routine, meditation" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://dailystoic.app/" />
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#0a0908" />
+    <meta name="msapplication-TileColor" content="#0a0908" />
+    
+    <title>Daily Stoic —  Wisdom in Your Inbox</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
@@ -27,58 +56,41 @@ import '../styles/global.css';
 
     <main class="hero">
       <div class="container">
-        <!-- Roman numeral decoration -->
-        <div class="hero__numeral">MMXXV</div>
-        
-        <!-- Badge -->
-        <div class="hero__badge">
-          Free daily wisdom delivered at dawn
-        </div>
-        
-        <!-- Title -->
-        <h1 class="hero__title">
-          Awaken each day with<br /><em>ancient wisdom</em>
-        </h1>
-        
-        <!-- Subtitle -->
-        <h2 class="hero__subtitle">
-          Timeless philosophy for the modern mind.<br />
-          One carefully curated quote, every morning at 8 AM.
-        </h2>
+        <div class="hero__content">
+          <!-- Badge -->
+          <div class="hero__badge">
+            Free daily wisdom delivered at dawn
+          </div>
+          
+          <!-- Title -->
+          <h1 class="hero__title">
+            Awaken each day with<br /><em>ancient wisdom</em>
+          </h1>
+          
+          <!-- Subtitle -->
+          <h2 class="hero__subtitle">
+            Timeless philosophy for the modern mind.
+          </h2>
 
-        <!-- Subscribe Form -->
-        <form class="subscribe-form" id="subscribe-form">
-          <input 
-            type="email" 
-            name="email"
-            class="subscribe-form__input" 
-            placeholder="Enter your email address" 
-            required 
-            autocomplete="email"
-          />
-          <button type="submit" class="subscribe-form__button">
-            <span>Begin Journey</span>
-          </button>
-        </form>
+          <!-- Subscribe Form -->
+          <form class="subscribe-form" id="subscribe-form">
+            <input 
+              type="email" 
+              name="email"
+              class="subscribe-form__input" 
+              placeholder="Enter your email address" 
+              required 
+              autocomplete="email"
+            />
+            <button type="submit" class="subscribe-form__button">
+              <span>Begin Journey</span>
+            </button>
+          </form>
+        </div>
 
         <!-- Message -->
         <div id="message" class="message" style="display: none;"></div>
 
-        <!-- Trust indicators -->
-        <div class="trust-indicators">
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>No spam, ever</span>
-          </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Daily at 8 AM</span>
-          </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            <span>Unsubscribe anytime</span>
-          </div>
-        </div>
 
         <!-- Quote Preview Section -->
         <section class="quote-section">
@@ -101,24 +113,21 @@ import '../styles/global.css';
           
           <div class="features">
             <div class="feature">
-              <div class="feature__icon">☀️</div>
               <h3 class="feature__title">Morning Ritual</h3>
               <p class="feature__description">
-                Start each day with intention. Your quote arrives precisely at 8 AM.
+                Start each day with intention.
               </p>
             </div>
             <div class="feature">
-              <div class="feature__icon">📜</div>
               <h3 class="feature__title">Curated Wisdom</h3>
               <p class="feature__description">
                 Hand-selected teachings from Marcus Aurelius, Seneca, and Epictetus.
               </p>
             </div>
             <div class="feature">
-              <div class="feature__icon">✨</div>
               <h3 class="feature__title">Pure Simplicity</h3>
               <p class="feature__description">
-                One beautiful email. No ads, no links, no distractions. Just wisdom.
+                One beautiful email. No ads, no links, no fuzz.
               </p>
             </div>
           </div>

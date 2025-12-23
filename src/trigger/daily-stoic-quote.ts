@@ -225,22 +225,24 @@ async function sendQuotesToRegion(regionName: string, timezones: string[]) {
   console.log(`📧 [${regionName.toUpperCase()}] Sending to ${subscribers.length} subscriber(s)`);
 
   // Get the app URL for unsubscribe links
-  const appUrl = process.env.APP_URL || "https://247-pi.vercel.app";
+  const appUrl = process.env.APP_URL;
+  if (!appUrl) {
+    throw new Error("APP_URL environment variable is required");
+  }
 
-  // Trigger email sending for each subscriber
-  const emailResults = await Promise.all(
-    subscribers.map((subscriber) => {
-      const unsubscribeUrl = `${appUrl}/unsubscribe?token=${subscriber.unsubscribe_token}`;
+  // Use batchTrigger for efficient handling of large subscriber lists
+  // This avoids potential rate limits and is more efficient than individual triggers
+  const batchPayloads = subscribers.map((subscriber) => ({
+    payload: {
+      to: subscriber.email,
+      quote: quote.quote,
+      author: quote.author,
+      date: today,
+      unsubscribeUrl: `${appUrl}/unsubscribe?token=${subscriber.unsubscribe_token}`,
+    },
+  }));
 
-      return sendStoicQuoteEmail.trigger({
-        to: subscriber.email,
-        quote: quote.quote,
-        author: quote.author,
-        date: today,
-        unsubscribeUrl,
-      });
-    })
-  );
+  const batchResult = await sendStoicQuoteEmail.batchTrigger(batchPayloads);
 
   return {
     sent: true,
@@ -249,7 +251,8 @@ async function sendQuotesToRegion(regionName: string, timezones: string[]) {
     quote: quote.quote,
     author: quote.author,
     subscribersCount: subscribers.length,
-    emailResults: emailResults.map((r) => r.id),
+    batchId: batchResult.batchId,
+    runCount: batchResult.runs.length,
   };
 }
 

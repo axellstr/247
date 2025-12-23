@@ -1,8 +1,49 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-export const POST: APIRoute = async ({ request }) => {
+// Simple in-memory rate limiter
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10; // 10 requests per minute per IP
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return true;
+  }
+
+  entry.count++;
+  return false;
+}
+
+// Clean up old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap.entries()) {
+    if (now > entry.resetTime) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}, 5 * 60 * 1000);
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    // Rate limiting check
+    const ip = clientAddress || request.headers.get('x-forwarded-for') || 'unknown';
+    if (isRateLimited(ip)) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again in a minute.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { email } = await request.json();
 
     if (!email || typeof email !== 'string') {

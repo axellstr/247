@@ -7,8 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "dev:trigger": "npx trigger.dev@latest dev --env-file=.env",
-    "deploy:trigger": "trigger deploy",
-    "test:task": "node test-task.js"
+    "deploy:trigger": "trigger deploy"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.2",

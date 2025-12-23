@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS subscribers (
 );
 
 -- Migration: Add timezone column to existing table (run this if table already exists)
--- ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'UTC';
+ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'UTC';
 
 -- Create index on email for fast lookups
 CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers(email);
@@ -23,6 +23,9 @@ CREATE INDEX IF NOT EXISTS idx_subscribers_subscribed ON subscribers(subscribed)
 
 -- Create index on unsubscribe_token for one-click unsubscribe
 CREATE INDEX IF NOT EXISTS idx_subscribers_unsubscribe_token ON subscribers(unsubscribe_token);
+
+-- Create index on timezone for efficient timezone-based queries
+CREATE INDEX IF NOT EXISTS idx_subscribers_timezone ON subscribers(timezone);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE subscribers ENABLE ROW LEVEL SECURITY;
